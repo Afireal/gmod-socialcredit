@@ -1,4 +1,5 @@
 
+AddCSLuaFile()
 local LANGUAGE = {}
 
 LANGUAGE["hoboBenefitsMsg"] = "The goverment has paid you unemployment benefits"
