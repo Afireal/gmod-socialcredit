@@ -43,7 +43,7 @@ hook.Add("ShutDown", "SocialCredit", socialcredit.SaveAll)
 concommand.Add("sc_saveall", function(ply)
 
 	if !IsValid(ply) then goto ALLOWED end
-	if !CAMI.PlayerHasAccess(ply, "SocialCreditControl") then return end
+	if !CAMI.PlayerHasAccess(ply, "Social credit control") then return end
 
 	::ALLOWED::
 	socialcredit.SaveAll()
