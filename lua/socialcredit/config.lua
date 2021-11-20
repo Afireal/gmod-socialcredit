@@ -2,7 +2,7 @@
 AddCSLuaFile()
 local CONFIG = {}
 
-CONFIG.Language = "ru"
+CONFIG.Language = "en"
 
 CONFIG.DefaultValue = 100
 CONFIG.MinValue = 0
