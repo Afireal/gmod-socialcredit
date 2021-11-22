@@ -34,7 +34,7 @@ end
 
 function socialcredit.SaveAll()
 
-	file.Write(socialcredit.Config.SaveFile, util.TableToJSON(tempData, true))
+	file.Write(socialcredit.Config.SaveFile, util.TableToJSON(tempData))
 
 end
 

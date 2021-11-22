@@ -139,6 +139,7 @@ end, {
 buildFeature("AutoWanted", "OnSocialCreditUpdated", function(params, ply)
 
 	if ply:GetSocialCredit() > socialcredit.Config.MinValue then return end
+	if ply:isWanted() then return end
 
 	ply:wanted(nil, socialcredit.Localize("unreliableOne"))
 
@@ -209,3 +210,17 @@ end, {
 	}
 
 })
+
+buildFeature("AllowCutsomJob", "playerCanChangeTeam", function(params, ply, job, forced)
+
+	if forced then return end
+	
+	local jobTable = RPExtraTeams[job]
+	if !jobTable then return end
+
+	if !jobTable.credit then return end
+	if ply:GetSocialCredit() >= credit then return end
+
+	return false, socialcredit.Localize("lowCreditForJob")
+
+end)
