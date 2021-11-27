@@ -15,6 +15,26 @@ function socialcredit.utils.Clamp(value)
 
 end
 
+function socialcredit.utils.Transcript(input)
+
+	if !input then return end
+	
+	if istable(input) then
+	
+		input = util.TableToJSON(input) or "[]"
+		input = util.Compress(input)
+	
+	elseif isstring(input) then
+	
+		input = util.Decompress(input) or "[]"
+		input = util.JSONToTable(input)
+	
+	end
+	
+	return input
+
+end
+
 if CLIENT then return end
 
 function socialcredit.utils.LogAction(ply, cmd, args)

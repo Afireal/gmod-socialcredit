@@ -1,18 +1,35 @@
 
-local GM = GM or gmod.GetGamemode()
-local conVars = {}
+AddCSLuaFile()
+
+local featuresTable = {}
 local featuresParams = {}
+local conVarsFlags = SERVER and {FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_REPLICATED} or FCVAR_REPLICATED
+local GM = GM or gmod.GetGamemode()
+
+function socialcredit.GetFeatures()
+
+	return featuresTable
+
+end
 
 local function buildFeature(id, eventName, hookFunc, params)
 
-	conVars[id] = CreateConVar("sc_"..string.lower(id), "1", nil, "", "0", "1")
+	featuresTable[id] = params or {}
 
-	hook.Add(eventName, "SocialRating."..id, function(...)
-	
-		if !conVars[id]:GetBool() then return end
-		return hookFunc(featuresParams[id], ...)
-	
-	end)
+	local command = "sc_"..string.lower(id)
+	local printName = socialcredit.Localize(id)
+	local featureEnabled = CreateConVar(command, "1", conVarsFlags, "Enable "..printName, "0", "1")
+
+	if SERVER then
+
+		hook.Add(eventName, "SocialCredit."..id, function(...)
+		
+			if !featureEnabled:GetBool() then return end
+			return hookFunc(featuresParams[id], ...)
+		
+		end)
+
+	end
 
 	if !istable(params) then return end
 
@@ -20,7 +37,9 @@ local function buildFeature(id, eventName, hookFunc, params)
 
 	for k,v in pairs(params) do
 	
-		featuresParams[id][k] = CreateConVar("sc_"..string.lower(id).."_"..string.lower(k), tostring(v.defaultValue), nil, "", v.minValue, v.maxValue)
+		local command = "sc_"..string.lower(id).."_"..string.lower(k)
+		local printName = socialcredit.Localize(k)
+		featuresParams[id][k] = CreateConVar(command, tostring(v.defaultValue), conVarsFlags, printName, v.minValue, v.maxValue)
 	
 	end
 
@@ -40,7 +59,7 @@ end, {
 	needCredit = {
 		defaultValue = 80,
 		minValue = socialcredit.Config.MinValue,
-		minValue = socialcredit.Config.MaxValue,
+		maxValue = socialcredit.Config.MaxValue,
 	}
 
 })
@@ -58,9 +77,9 @@ buildFeature("ArrestEffect", "playerArrested", function(params, ply, time, polic
 end, {
 
 	influence = {
-		defaultValue = 5,
+		defaultValue = 10,
 		minValue = 1,
-		minValue = 25,
+		maxValue = 25,
 	}
 
 })
@@ -72,9 +91,9 @@ buildFeature("TaxesEffect", "onPaidTax", function(params, ply, tax, wallet)
 end, {
 
 	influence = {
-		defaultValue = 5,
+		defaultValue = 2,
 		minValue = 1,
-		minValue = 25,
+		maxValue = 25,
 	}
 
 })
@@ -88,9 +107,9 @@ buildFeature("SalaryEffect", "playerGetSalary", function(params, ply, tax, walle
 end, {
 
 	influence = {
-		defaultValue = 5,
+		defaultValue = 2,
 		minValue = 1,
-		minValue = 25,
+		maxValue = 25,
 	}
 
 })
@@ -112,7 +131,7 @@ end, {
 	needCredit = {
 		defaultValue = 75,
 		minValue = socialcredit.Config.MinValue,
-		minValue = socialcredit.Config.MaxValue,
+		maxValue = socialcredit.Config.MaxValue,
 	}
 
 })
@@ -131,7 +150,7 @@ end, {
 	needCredit = {
 		defaultValue = 50,
 		minValue = socialcredit.Config.MinValue,
-		minValue = socialcredit.Config.MaxValue,
+		maxValue = socialcredit.Config.MaxValue,
 	}
 
 })
@@ -167,13 +186,13 @@ end, {
 	CPLimit = {
 		defaultValue = 25,
 		minValue = socialcredit.Config.MinValue,
-		minValue = socialcredit.Config.MaxValue,
+		maxValue = socialcredit.Config.MaxValue,
 	},
 
 	MayorLimit = {
 		defaultValue = 30,
 		minValue = socialcredit.Config.MinValue,
-		minValue = socialcredit.Config.MaxValue,
+		maxValue = socialcredit.Config.MaxValue,
 	}
 
 })
@@ -200,18 +219,18 @@ end, {
 	influence = {
 		defaultValue = 5,
 		minValue = 1,
-		minValue = 50,
+		maxValue = 50,
 	},
 
 	CPImmunity = {
 		defaultValue = 0,
 		minValue = 0,
-		minValue = 1,
+		maxValue = 1,
 	}
 
 })
 
-buildFeature("AllowCutsomJob", "playerCanChangeTeam", function(params, ply, job, forced)
+buildFeature("AllowCustomJob", "playerCanChangeTeam", function(params, ply, job, forced)
 
 	if forced then return end
 	
@@ -224,3 +243,38 @@ buildFeature("AllowCutsomJob", "playerCanChangeTeam", function(params, ply, job,
 	return false, socialcredit.Localize("lowCreditForJob")
 
 end)
+
+buildFeature("WeaponConfiscation", "playerWeaponsConfiscated", function(params, police, ply, weapons)
+
+	if table.IsEmpty(weapons) then return end
+
+	local count = table.Count(weapons)
+	local amount = params.influence:GetInt()
+
+	ply:AddSocialCredit(-amount*count)
+
+end, {
+
+	influence = {
+		defaultValue = 2,
+		minValue = 1,
+		maxValue = 25,
+	}
+
+})
+
+buildFeature("LicenseBonus", "playerGotLicense", function(params, ply, mayor)
+
+	if !(IsValid(mayor) && mayor:IsPlayer()) then return end
+
+	ply:AddSocialCredit(params.influence:GetInt())
+
+end, {
+
+	influence = {
+		defaultValue = 1,
+		minValue = 1,
+		maxValue = 25,
+	}
+
+})
