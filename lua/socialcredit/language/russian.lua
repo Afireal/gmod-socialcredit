@@ -28,7 +28,7 @@ LANGUAGE["needCredit"] = "Необходимый рейтинг"
 LANGUAGE["influence"] = "Влияние"
 LANGUAGE["CPLimit"] = "Ограничение для полиции"
 LANGUAGE["MayorLimit"] = "Ограничение для мэра"
-LANGUAGE["CPImmunity"] = "Не работает на полиции"
+LANGUAGE["CPImmunity"] = "Не работает на полицию"
 
 -- Menu
 LANGUAGE["scoreboard"] = "Счёт"

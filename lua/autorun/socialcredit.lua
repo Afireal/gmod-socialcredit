@@ -1,6 +1,6 @@
 
 socialcredit = socialcredit or {}
-socialcredit.Version = "0.8"
+socialcredit.Version = "0.8a"
 socialcredit.Config = include("socialcredit/config.lua")
 
 local Player = FindMetaTable("Player")
