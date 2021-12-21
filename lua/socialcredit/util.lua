@@ -4,8 +4,9 @@ socialcredit.utils = socialcredit.utils or {}
 
 function socialcredit.utils.ValidateSteamID(steamid)
 
-	-- ¯\_(ツ)_/¯
-	return util.SteamIDTo64(steamid) ~= "0"
+	if !isstring(steamid) then return false end
+
+	return steamid:match("^STEAM_%d:%d:%d+$")
 
 end
 

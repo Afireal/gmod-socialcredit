@@ -38,5 +38,8 @@ LANGUAGE["update"] = "Update"
 LANGUAGE["settings"] = "Settings"
 LANGUAGE["enableFeature"] = "Enable"
 LANGUAGE["about"] = "About"
+LANGUAGE["setCredit"] = "Set credit"
+LANGUAGE["copySteamID"] = "Copy SteamID"
+LANGUAGE["inputNumber"] = "Input a number to set."
 
 return LANGUAGE

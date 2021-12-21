@@ -1,6 +1,7 @@
 
 socialcredit = socialcredit or {}
-socialcredit.Version = "0.8a"
+socialcredit.Version = "0.9"
+socialcredit.Privilege = "SocialCreditControl"
 socialcredit.Config = include("socialcredit/config.lua")
 
 local Player = FindMetaTable("Player")
@@ -37,16 +38,18 @@ hook.Add("OnGamemodeLoaded", "SocialCredit", function()
 
 	CAMI.RegisterPrivilege {
 		
-		Name = "Social credit control",
+		Name = socialcredit.Privilege,
 		Description = "Access to control social credit system",
 		MinAccess = "admin",
 
 	}
 
 	DarkRP.declareChatCommand {
+
 		command = "setcredit",
 		description = "Set player social credit by SteamID",
 		delay = 1
+
 	}
 
 end)

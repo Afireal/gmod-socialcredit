@@ -1,5 +1,5 @@
 
-DarkRP.definePrivilegedChatCommand("setcredit", "Social credit control", function(ply, text)
+DarkRP.definePrivilegedChatCommand("setcredit", socialcredit.Privilege, function(ply, text)
 
 	local args = string.Explode(" ", text)
 	if !args then return "" end
@@ -15,7 +15,17 @@ DarkRP.definePrivilegedChatCommand("setcredit", "Social credit control", functio
 	end
 
 	socialcredit.utils.LogAction(ply, "setcredit", text)
-	socialcredit.Set(target, value)
+
+	target = player.GetBySteamID(target) or target
+
+	if isstring(target) then
+	
+		socialcredit.Set(target, value)
+		return ""
+	
+	end
+
+	target:SetSocialCredit(value)
 	return ""
 
 end)
@@ -25,8 +35,8 @@ util.AddNetworkString("SocialCreditControl")
 net.Receive("SocialCreditControl", function(len, ply)
 
 	if !IsValid(ply) then return end
-	if !CAMI.PlayerHasAccess(ply, "Social credit control") then return end
-
+	if !CAMI.PlayerHasAccess(ply, socialcredit.Privilege) then return end
+ 
 	local len = net.ReadInt(17)
 	local data = net.ReadData(len)
 
@@ -39,6 +49,7 @@ net.Receive("SocialCreditControl", function(len, ply)
 		local conVar = GetConVar(data.conVar)
 		if !conVar then return end
 
+		socialcredit.utils.LogAction(ply, data.conVar, data.value)
 		conVar:SetInt(data.value)
 		return
 	

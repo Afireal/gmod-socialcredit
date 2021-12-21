@@ -66,8 +66,40 @@ function socialcredit.OpenMenu(_, pnl)
 		for _, ply in pairs(player.GetAll()) do
 		
 			local LINE = SCOREBOARD.List:AddLine(ply:Name(), ply:GetSocialCredit())
+			LINE.Player = ply
 		
 		end
+	
+	end
+
+	SCOREBOARD.List.OnRowSelected = function(self, rid, pnl)
+	
+		local ply = pnl.Player
+		if !ply then return end
+
+		local setCredit = socialcredit.Localize("setCredit")
+		local steamid = ply:SteamID()
+
+		local MENU = DermaMenu()
+		MENU:AddOption(setCredit, function()
+
+			Derma_StringRequest(setCredit, socialcredit.Localize("inputNumber"), tostring(socialcredit.Config.DefaultValue), function(input)
+			
+				input = tonumber(input)
+				if !isnumber(input) then return end
+
+				RunConsoleCommand("say", "/setcredit "..steamid.." "..input)
+				SCOREBOARD.List:Update()
+			
+			end)
+		
+		end):SetIcon("icon16/page_edit.png")
+		MENU:AddOption(socialcredit.Localize("copySteamID"), function()
+		
+			SetClipboardText(steamid)
+		
+		end):SetIcon("icon16/page_copy.png")
+		MENU:Open()
 	
 	end
 
@@ -116,7 +148,7 @@ function socialcredit.OpenMenu(_, pnl)
 
 				pnl.Button.OnChange = function(s, v)
 
-					if !CAMI.PlayerHasAccess(LocalPlayer(), "Social credit control") then return end
+					if !CAMI.PlayerHasAccess(LocalPlayer(), socialcredit.Privilege) then return end
 
 					local data = socialcredit.utils.Transcript {
 					
@@ -149,7 +181,7 @@ function socialcredit.OpenMenu(_, pnl)
 				pnl.OnValueChanged = function(s, v)
 
 					if s._ignore then return end
-					if !CAMI.PlayerHasAccess(LocalPlayer(), "Social credit control") then return end
+					if !CAMI.PlayerHasAccess(LocalPlayer(), socialcredit.Privilege) then return end
 
 					timer.Create("SocialCredit.ChangeConvar", 0.3, 1, function() 
 					

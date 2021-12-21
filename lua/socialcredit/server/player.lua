@@ -15,9 +15,7 @@ function Player:AddSocialCredit(value)
 
 	assert(isnumber(value), "Invalid value")
 
-	value = self:GetSocialCredit() + value
-
-	self:SetSocialCredit(value)
+	self:SetSocialCredit(self:GetSocialCredit() + value)
 
 end
 
