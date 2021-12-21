@@ -1,6 +1,6 @@
 
 socialcredit = socialcredit or {}
-socialcredit.Version = "0.9"
+socialcredit.Version = "1.0"
 socialcredit.Privilege = "SocialCreditControl"
 socialcredit.Config = include("socialcredit/config.lua")
 
@@ -21,6 +21,8 @@ hook.Add("OnGamemodeLoaded", "SocialCredit", function()
 	include "socialcredit/util.lua"
 
 	if SERVER then
+
+		resource.AddSingleFile "materials/icon64/social_credit.png"
 
 		AddCSLuaFile "socialcredit/client/menu.lua"
 

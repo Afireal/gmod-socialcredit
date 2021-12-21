@@ -281,7 +281,7 @@ end
 list.Add("DesktopWindows", {
 
 	title = menuTitle,
-	icon = "icon64/tool.png",
+	icon = "icon64/social_credit.png",
 	init = socialcredit.OpenMenu,
 	onewindow = true,
 	width = menuSize.w,
