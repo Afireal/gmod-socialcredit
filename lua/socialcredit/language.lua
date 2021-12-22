@@ -13,6 +13,12 @@ if socialcredit.Config.Language == "" then
 
 end
 
+if !localizationTable[curLang] then
+
+	curLang = "en"
+
+end
+
 function socialcredit.Localize(key)
 	
 	if !localizationTable[curLang] then return key end

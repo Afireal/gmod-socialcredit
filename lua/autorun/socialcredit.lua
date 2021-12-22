@@ -1,6 +1,6 @@
 
 socialcredit = socialcredit or {}
-socialcredit.Version = "1.0a"
+socialcredit.Version = "1.0b"
 socialcredit.Privilege = "SocialCreditControl"
 socialcredit.Config = include("socialcredit/config.lua")
 
