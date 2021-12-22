@@ -1,6 +1,6 @@
 
 socialcredit = socialcredit or {}
-socialcredit.Version = "1.0"
+socialcredit.Version = "1.0a"
 socialcredit.Privilege = "SocialCreditControl"
 socialcredit.Config = include("socialcredit/config.lua")
 
@@ -14,8 +14,12 @@ end
 
 hook.Add("OnGamemodeLoaded", "SocialCredit", function()
 
-	assert(DarkRP, "Social credit system is DarkRP only")
-	print("Social credit system "..socialcredit.Version)
+	if !DarkRP then
+	
+		print "Social credit system is DarkRP only"
+		return
+	
+	end
 
 	include "socialcredit/language.lua"
 	include "socialcredit/util.lua"

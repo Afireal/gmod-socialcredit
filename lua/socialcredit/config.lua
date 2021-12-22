@@ -2,7 +2,8 @@
 AddCSLuaFile()
 local CONFIG = {}
 
-CONFIG.Language = "en"
+-- If "" set, depends on 'gmod_language' ConVar
+CONFIG.Language = ""
 
 CONFIG.DefaultValue = 100
 CONFIG.MinValue = 0

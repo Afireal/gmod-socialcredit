@@ -5,10 +5,18 @@ local localizationTable = {}
 localizationTable["en"] = include("language/english.lua")
 localizationTable["ru"] = include("language/russian.lua")
 
+local curLang = socialcredit.Config.Language
+
+if socialcredit.Config.Language == "" then
+
+	curLang = GetConVar("gmod_language"):GetString()
+
+end
+
 function socialcredit.Localize(key)
 	
-	if !localizationTable[socialcredit.Config.Language] then return key end
+	if !localizationTable[curLang] then return key end
 
-	return localizationTable[socialcredit.Config.Language][key] or key
+	return localizationTable[curLang][key] or key
 
 end

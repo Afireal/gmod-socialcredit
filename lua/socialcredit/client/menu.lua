@@ -252,6 +252,18 @@ function socialcredit.OpenMenu(_, pnl)
 	
 	end
 
+	ABOUT.Workshop = vgui.Create("DButton", ABOUT)
+	ABOUT.Workshop:Dock(TOP)
+	ABOUT.Workshop:DockMargin(2, 2, 2, 2)
+	ABOUT.Workshop:SetText("Steam Workshop")
+	ABOUT.Workshop:SetIcon("games/16/all.png")
+
+	ABOUT.Workshop.DoClick = function()
+	
+		gui.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=2689262881")
+	
+	end
+
 	ABOUT.License = vgui.Create("DButton", ABOUT)
 	ABOUT.License:Dock(TOP)
 	ABOUT.License:DockMargin(2, 2, 2, 2)
@@ -278,6 +290,7 @@ function socialcredit.OpenMenu(_, pnl)
 
 end
 
+concommand.Add("sc_menu", socialcredit.OpenMenu)
 list.Add("DesktopWindows", {
 
 	title = menuTitle,
