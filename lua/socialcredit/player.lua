@@ -30,18 +30,3 @@ function Player:AddSocialCredit(value)
 	self:SetSocialCredit(self:GetSocialCredit() + value)
 
 end
-
-hook.Add("PlayerInitialSpawn", "SocialCredit", function(ply)
-
-	local credit = socialcredit.Get(ply:SteamID())
-
-	if !isnumber(credit) then
-	
-		socialcredit.Set(self:SteamID(), socialcredit.Config.DefaultValue)
-		credit = socialcredit.Config.DefaultValue
-	
-	end
-
-	ply:SetNWInt("SocialCredit", credit)
-
-end)
