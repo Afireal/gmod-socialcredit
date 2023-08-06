@@ -1,6 +1,6 @@
 
-local menuTitle = "Social credit system"
-local menuSize = {w = 400, h = 500}
+local menuTitle = "Social credit"
+local menuSize = {w = 350, h = 400}
 
 local emptyFunction = function() end
 
@@ -57,6 +57,7 @@ function socialcredit.OpenMenu(_, pnl)
 	SCOREBOARD.List:DockMargin(2, 2, 2, 2)
 	SCOREBOARD.List:SetMultiSelect(false)
 	SCOREBOARD.List:AddColumn(socialcredit.Localize("playerName"))
+	SCOREBOARD.List:AddColumn(socialcredit.Localize("playerJob"))
 	SCOREBOARD.List:AddColumn(socialcredit.Localize("playerCredit")):SetFixedWidth(100)
 
 	SCOREBOARD.List.Update = function(self)
@@ -65,7 +66,7 @@ function socialcredit.OpenMenu(_, pnl)
 	
 		for _, ply in pairs(player.GetAll()) do
 		
-			local LINE = SCOREBOARD.List:AddLine(ply:Name(), ply:GetSocialCredit())
+			local LINE = SCOREBOARD.List:AddLine(ply:Name(), team.GetName(ply:Team()), ply:GetSocialCredit())
 			LINE.Player = ply
 		
 		end
@@ -81,7 +82,7 @@ function socialcredit.OpenMenu(_, pnl)
 		local steamid = ply:SteamID()
 
 		local MENU = DermaMenu()
-		MENU:AddOption(setCredit, function()
+		/*MENU:AddOption(setCredit, function()
 
 			Derma_StringRequest(setCredit, socialcredit.Localize("inputNumber"), tostring(socialcredit.Config.DefaultValue), function(input)
 			
@@ -93,7 +94,7 @@ function socialcredit.OpenMenu(_, pnl)
 			
 			end)
 		
-		end):SetIcon("icon16/page_edit.png")
+		end):SetIcon("icon16/page_edit.png")*/
 		MENU:AddOption(socialcredit.Localize("copySteamID"), function()
 		
 			SetClipboardText(steamid)
@@ -106,6 +107,7 @@ function socialcredit.OpenMenu(_, pnl)
 	SCOREBOARD.Buttons = vgui.Create("DPanel", SCOREBOARD)
 	SCOREBOARD.Buttons:Dock(BOTTOM)
 	SCOREBOARD.Buttons:DockMargin(2, 2, 2, 2)
+	SCOREBOARD.Buttons.Paint = emptyFunction
 
 	SCOREBOARD.Buttons.Update = vgui.Create("DButton", SCOREBOARD.Buttons)
 	SCOREBOARD.Buttons.Update:Dock(RIGHT)
@@ -150,14 +152,12 @@ function socialcredit.OpenMenu(_, pnl)
 
 					if !CAMI.PlayerHasAccess(LocalPlayer(), socialcredit.Privilege) then return end
 
-					local data = socialcredit.utils.Transcript {
+					local data = util.Compress(util.TableToJSON{
 					
 						conVar = convar,
 						value = v and 1 or 0
 					
-					}
-
-					print(convar, v)
+					})
 
 					net.Start("SocialCreditControl", true)
 
@@ -184,13 +184,13 @@ function socialcredit.OpenMenu(_, pnl)
 					if !CAMI.PlayerHasAccess(LocalPlayer(), socialcredit.Privilege) then return end
 
 					timer.Create("SocialCredit.ChangeConvar", 0.3, 1, function() 
-					
-						local data = socialcredit.utils.Transcript {
+
+						local data = util.Compress(util.TableToJSON{
 					
 							conVar = convar,
 							value = v
 						
-						}
+						})
 	
 						net.Start("SocialCreditControl", true)
 	
@@ -235,26 +235,37 @@ function socialcredit.OpenMenu(_, pnl)
 
 	ABOUT.Title = vgui.Create("DLabel", ABOUT)
 	ABOUT.Title:Dock(TOP)
-	ABOUT.Title:DockMargin(2, 2, 2, 2)
+	ABOUT.Title:DockMargin(2, 12, 2, 2)
 	ABOUT.Title:SetFont("DermaLarge")
-	ABOUT.Title:SetText("Social credit system "..socialcredit.Version)
+	ABOUT.Title:SetDark(true)
+	ABOUT.Title:SetContentAlignment(5)
+	ABOUT.Title:SetText("Social credit system")
 	ABOUT.Title:SizeToContents()
+
+	ABOUT.Version = vgui.Create("DLabel", ABOUT)
+	ABOUT.Version:Dock(TOP)
+	ABOUT.Version:DockMargin(2, 2, 2, 20)
+	ABOUT.Version:SetFont("Trebuchet24")
+	ABOUT.Version:SetDark(true)
+	ABOUT.Version:SetContentAlignment(5)
+	ABOUT.Version:SetText(socialcredit.Version)
+	ABOUT.Version:SizeToContents()
 
 	ABOUT.Source = vgui.Create("DButton", ABOUT)
 	ABOUT.Source:Dock(TOP)
-	ABOUT.Source:DockMargin(2, 2, 2, 2)
+	ABOUT.Source:DockMargin(24, 2, 24, 2)
 	ABOUT.Source:SetText("GitHub")
 	ABOUT.Source:SetIcon("icon16/package_link.png")
 
 	ABOUT.Source.DoClick = function()
 	
-		gui.OpenURL("https://github.com/Afireal/gmod-social-credit/")
+		gui.OpenURL("https://github.com/Afireal/gmod-socialcredit")
 	
 	end
 
 	ABOUT.Workshop = vgui.Create("DButton", ABOUT)
 	ABOUT.Workshop:Dock(TOP)
-	ABOUT.Workshop:DockMargin(2, 2, 2, 2)
+	ABOUT.Workshop:DockMargin(24, 2, 24, 2)
 	ABOUT.Workshop:SetText("Steam Workshop")
 	ABOUT.Workshop:SetIcon("games/16/all.png")
 
@@ -266,8 +277,8 @@ function socialcredit.OpenMenu(_, pnl)
 
 	ABOUT.License = vgui.Create("DButton", ABOUT)
 	ABOUT.License:Dock(TOP)
-	ABOUT.License:DockMargin(2, 2, 2, 2)
-	ABOUT.License:SetText("Licence")
+	ABOUT.License:DockMargin(24, 2, 24, 2)
+	ABOUT.License:SetText("License")
 	ABOUT.License:SetIcon("icon16/page_white_key.png")
 
 	ABOUT.License.DoClick = function()
@@ -291,6 +302,9 @@ function socialcredit.OpenMenu(_, pnl)
 end
 
 concommand.Add("sc_menu", socialcredit.OpenMenu)
+
+if socialcredit.Config.HideIcon then return end
+
 list.Add("DesktopWindows", {
 
 	title = menuTitle,

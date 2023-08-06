@@ -1,61 +1,34 @@
 
 socialcredit = socialcredit or {}
-socialcredit.Version = "1.0b"
+socialcredit.Version = "2.0"
 socialcredit.Privilege = "SocialCreditControl"
 socialcredit.Config = include("socialcredit/config.lua")
 
-local Player = FindMetaTable("Player")
+CAMI.RegisterPrivilege {
+		
+	Name = socialcredit.Privilege,
+	Description = "Access to control social credit system",
+	MinAccess = "superadmin",
 
-function Player:GetSocialCredit()
+}
 
-	return self:GetNWInt("SocialCredit")
+function socialcredit.Clamp(value)
+
+	return math.Clamp(value, socialcredit.Config.MinValue, socialcredit.Config.MaxValue)
 
 end
 
-hook.Add("OnGamemodeLoaded", "SocialCredit", function()
+function socialcredit.GetFeatures()
 
-	if !DarkRP then
-	
-		print "Social credit system is DarkRP only"
-		return
-	
-	end
+	return {}
 
-	include "socialcredit/language.lua"
-	include "socialcredit/util.lua"
+end
 
-	if SERVER then
+include "socialcredit/player.lua"
+include "socialcredit/l10n.lua"
 
-		resource.AddSingleFile "materials/icon64/social_credit.png"
+if CLIENT then return end
 
-		AddCSLuaFile "socialcredit/client/menu.lua"
+resource.AddSingleFile "materials/icon64/social_credit.png"
 
-		include "socialcredit/server/control.lua"
-		include "socialcredit/server/data.lua"
-		include "socialcredit/server/player.lua"
-	
-	else
-	
-		include "socialcredit/client/menu.lua"
-	
-	end
-
-	include "socialcredit/features.lua"
-
-	CAMI.RegisterPrivilege {
-		
-		Name = socialcredit.Privilege,
-		Description = "Access to control social credit system",
-		MinAccess = "admin",
-
-	}
-
-	DarkRP.declareChatCommand {
-
-		command = "setcredit",
-		description = "Set player social credit by SteamID",
-		delay = 1
-
-	}
-
-end)
+include "socialcredit/data.lua"

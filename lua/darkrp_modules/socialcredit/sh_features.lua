@@ -1,16 +1,14 @@
 
-AddCSLuaFile()
-
 local featuresTable = {}
 local featuresParams = {}
-local conVarsFlags = SERVER and {FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_REPLICATED} or FCVAR_REPLICATED
-local GM = GM or gmod.GetGamemode()
 
 function socialcredit.GetFeatures()
 
 	return featuresTable
 
 end
+
+local conVarsFlags = SERVER and {FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_REPLICATED} or FCVAR_REPLICATED
 
 local function buildFeature(id, eventName, hookFunc, params)
 
@@ -44,6 +42,8 @@ local function buildFeature(id, eventName, hookFunc, params)
 	end
 
 end
+
+local GM = GAMEMODE or gmod.GetGamemode()
 
 buildFeature("HoboBenefits", "playerGetSalary", function(params, ply, amount)
 

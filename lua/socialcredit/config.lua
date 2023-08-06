@@ -9,8 +9,10 @@ CONFIG.DefaultValue = 100
 CONFIG.MinValue = 0
 CONFIG.MaxValue = 100
 
-CONFIG.SaveFile = "social_credit.json"
+-- Hide control panel from context menu
+CONFIG.HideIcon = false
 
-CONFIG.EnableLog = true
+-- Makes social credit reset after a server restart. Can be useful
+CONFIG.DisableDB = false
 
 return CONFIG
